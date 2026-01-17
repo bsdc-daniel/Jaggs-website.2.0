@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jags - Premium Streetwear</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: #000000;
+            color: #fff;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Alfa Slab One', cursive;
+            color: #E25D4F;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .basket {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .basket-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #E25D4F;
+            color: #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .basket-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            color: #333;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-top: 1rem;
+            padding: 1rem;
+            display: none;
+            z-index: 2000;
+        }
+
+        .basket-dropdown.show {
+            display: block;
+        }
+
+        .basket-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .basket-item-info {
+            flex: 1;
+        }
+
+        .basket-item-name {
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 0.25rem;
+        }
+
+        .basket-item-price {
+            color: #4A9B9B;
+            font-size: 0.9rem;
+        }
+
+        .basket-item-remove {
+            background: #E25D4F;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .basket-total {
+            padding: 1rem 0.75rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            border-top: 2px solid #4A9B9B;
+            margin-top: 0.5rem;
+        }
+
+        .basket-empty {
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+        }
+
+        .checkout-button {
+            background: #4A9B9B;
+            color: #fff;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .checkout-button:hover {
+            background: #3A8B8B;
+        }
+
+        /* Auth Modal Styles */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-modal.show {
+            display: flex;
+        }
+
+        .auth-modal-content {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+        }
+
+        .auth-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .auth-modal h2 {
+            color: #E25D4F;
+            font-family: 'Alfa Slab One', cursive;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .auth-input {
+            padding: 0.9rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #4A9B9B;
+        }
+
+        .auth-submit {
+            background: #E25D4F;
+            color: #fff;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .auth-submit:hover {
+            background: #FF8B6D;
+        }
+
+        .auth-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #999;
+            position: relative;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .auth-divider::before {
+            left: 0;
+        }
+
+        .auth-divider::after {
+            right: 0;
+        }
+
+        .social-auth {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.9rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .social-button:hover {
+            border-color: #4A9B9B;
+            background: #f8f9fa;
+        }
+
+        .social-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .auth-toggle a {
+            color: #4A9B9B;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .auth-toggle a:hover {
+            color: #E25D4F;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            color: #333;
+            min-width: 250px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-top: 1rem;
+            padding: 1rem;
+            display: none;
+            z-index: 2000;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .user-info {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 0.75rem;
+        }
+
+        .user-info div {
+            margin-bottom: 0.25rem;
+        }
+
+        #userName {
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        #userEmail {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .auth-button {
+            width: 100%;
+            background: #E25D4F;
+            color: #fff;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-button:hover {
+            background: #FF8B6D;
+        }
+
+        .auth-button.secondary {
+            background: #4A9B9B;
+        }
+
+        .auth-button.secondary:hover {
+            background: #3A8B8B;
+        }
+
+        .auth-error {
+            background: #ffe6e6;
+            color: #c74444;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-success {
+            background: #e6ffe6;
+            color: #2d7a2d;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #E25D4F;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #4A9B9B 0%, #2B7575 100%);
+            color: #fff;
+            padding: 150px 2rem 100px;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 100px;
+            height: 100px;
+            background: #FF8B6D;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            opacity: 0.3;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            font-family: 'Alfa Slab One', cursive;
+            color: #E25D4F;
+            text-shadow: 3px 3px 0 #000;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: #E25D4F;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(226, 93, 79, 0.4);
+            background: #FF8B6D;
+        }
+
+        .products {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .products h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #E25D4F;
+            font-family: 'Alfa Slab One', cursive;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .product-images {
+            display: flex;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .product-image {
+            min-width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #F4C542, #E8B042);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #fff;
+            border-bottom: 4px solid #4A9B9B;
+        }
+
+        .product-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+            z-index: 10;
+        }
+
+        .product-nav:hover {
+            background: rgba(226, 93, 79, 0.8);
+        }
+
+        .product-nav.prev {
+            left: 10px;
+        }
+
+        .product-nav.next {
+            right: 10px;
+        }
+
+        .product-card:hover .product-nav {
+            display: flex;
+        }
+
+        .product-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: background 0.3s;
+        }
+
+        .indicator.active {
+            background: #fff;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .product-info p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4A9B9B;
+            margin-bottom: 1rem;
+        }
+
+        .buy-button {
+            background: #E25D4F;
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .buy-button:hover {
+            background: #4A9B9B;
+        }
+
+        .about {
+            background: #f8f9fa;
+            padding: 5rem 2rem;
+        }
+
+        .about-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #E25D4F;
+            font-family: 'Alfa Slab One', cursive;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        footer {
+            background: #000000;
+            color: #fff;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #E25D4F;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="/ebf4afbc-7949-430e-9d8d-4c0ceca2a5b9.jpeg" alt="">
+                JAGS
+            </div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="/shoppage.html">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#" id="userAccount" onclick="toggleUserMenu(event)">
+                    <span id="userIcon">👤</span>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div id="loggedOutView">
+                            <button class="auth-button" onclick="showAuthModal('login')">Log In</button>
+                            <button class="auth-button secondary" onclick="showAuthModal('signup')">Sign Up</button>
+                        </div>
+                        <div id="loggedInView" style="display: none;">
+                            <div class="user-info">
+                                <div id="userName"></div>
+                                <div id="userEmail"></div>
+                            </div>
+                            <button class="auth-button" onclick="viewOrders()">My Orders</button>
+                            <button class="auth-button secondary" onclick="logOut()">Log Out</button>
+                        </div>
+                    </div>
+                </a></li>
+                <li class="basket" onclick="toggleBasket()">
+                    🛒
+                    <span class="basket-count" id="basketCount">0</span>
+                    <div class="basket-dropdown" id="basketDropdown">
+                        <div id="basketItems"></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <h1>JAGS</h1>
+        <p>Redefining Street Fashion with Bold Designs</p>
+        <a href="#shop" class="cta-button">Shop Now</a>
+    </section>
+
+    <section class="products" id="shop">
+        <h2>Featured Collection</h2>
+        <div class="product-grid">
+            <div class="product-card" data-product="0">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">👕</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #E25D4F, #FF8B6D);">👕</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #4A9B9B, #2B7575);">👕</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 0, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 0, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Classic Tee</h3>
+                    <p>Premium cotton blend with signature Jags logo</p>
+                    <div class="price">£35.00</div>
+                    <button class="buy-button" onclick="addToBasket('Classic Tee', 35.00)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-product="1">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">🧥</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #E25D4F, #FF8B6D);">🧥</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #4A9B9B, #2B7575);">🧥</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #000, #333);">🧥</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 1, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 1, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Urban Hoodie</h3>
+                    <p>Comfortable streetwear essential for any season</p>
+                    <div class="price">£65.00</div>
+                    <button class="buy-button" onclick="addToBasket('Urban Hoodie', 65.00)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-product="2">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">👖</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #2B4C7E, #567EBB);">👖</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #000, #333);">👖</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 2, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 2, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Relaxed Jeans</h3>
+                    <p>Durable denim with modern cut and finish</p>
+                    <div class="price">£75.00</div>
+                    <button class="buy-button" onclick="addToBasket('Relaxed Jeans', 75.00)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-product="3">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">🧢</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #E25D4F, #FF8B6D);">🧢</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #000, #333);">🧢</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #4A9B9B, #2B7575);">🧢</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 3, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 3, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Signature Cap</h3>
+                    <p>Complete your look with our branded headwear</p>
+                    <div class="price">£25.00</div>
+                    <button class="buy-button" onclick="addToBasket('Signature Cap', 25.00)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-product="4">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">👟</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #fff, #ddd);">👟</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #000, #333);">👟</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 4, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 4, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Street Sneakers</h3>
+                    <p>Comfortable kicks for everyday wear</p>
+                    <div class="price">£85.00</div>
+                    <button class="buy-button" onclick="addToBasket('Street Sneakers', 85.00)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-product="5">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">🧤</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #000, #333);">🧤</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #4A9B9B, #2B7575);">🧤</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 5, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 5, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Winter Gloves</h3>
+                    <p>Stay warm with style and comfort</p>
+                    <div class="price">£30.00</div>
+                    <button class="buy-button" onclick="addToBasket('Winter Gloves', 30.00)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-product="6">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">🎒</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #E25D4F, #FF8B6D);">🎒</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #000, #333);">🎒</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #4A9B9B, #2B7575);">🎒</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 6, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 6, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Urban Backpack</h3>
+                    <p>Spacious and stylish for daily adventures</p>
+                    <div class="price">£55.00</div>
+                    <button class="buy-button" onclick="addToBasket('Urban Backpack', 55.00)">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-product="7">
+                <div class="product-image-container">
+                    <div class="product-images">
+                        <div class="product-image">🧣</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #E25D4F, #FF8B6D);">🧣</div>
+                        <div class="product-image" style="background: linear-gradient(45deg, #4A9B9B, #2B7575);">🧣</div>
+                    </div>
+                    <button class="product-nav prev" onclick="changeImage(event, 7, -1)">‹</button>
+                    <button class="product-nav next" onclick="changeImage(event, 7, 1)">›</button>
+                    <div class="product-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Knit Scarf</h3>
+                    <p>Cozy accessory for cold weather</p>
+                    <div class="price">£35.00</div>
+                    <button class="buy-button" onclick="addToBasket('Knit Scarf', 35.00)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="about-content">
+            <h2>About Jags</h2>
+            <p>Founded in 2020, Jags was born from a passion for authentic street culture and contemporary fashion. We believe clothing is more than fabric—it's a statement of who you are.</p>
+            <p>Our designs blend urban aesthetics with premium quality, creating pieces that stand out while standing the test of time. Every Jags item is crafted with attention to detail and a commitment to sustainability.</p>
+            <p>Join the Jags community and express your individuality through fashion that matters.</p>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Men's Collection</a></li>
+                    <li><a href="#">Women's Collection</a></li>
+                    <li><a href="#">Accessories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Track Order</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Sustainability</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026 Jags Clothing. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <button class="auth-modal-close" onclick="closeAuthModal()">×</button>
+            <div id="authModalContent"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase Configuration
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, 
+                 createUserWithEmailAndPassword, signInWithEmailAndPassword,
+                 onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs } 
+                 from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ4TMMdbyvvaP6coPGtqH_5OS9QBP2CLE",
+            authDomain: "jags-701f6.firebaseapp.com",
+            projectId: "jags-701f6",
+            storageBucket: "jags-701f6.firebasestorage.app",
+            messagingSenderId: "345516446782",
+            appId: "1:345516446782:web:8791be9f14d732d9056d6f",
+            measurementId: "G-6F27JDWDXR"
+        };
+
+        // Initialize Firebase
+        let app, auth, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            window.firebaseInitialized = true;
+        } catch (error) {
+            console.log('Firebase not configured yet. Please add your Firebase config.');
+            window.firebaseInitialized = false;
+        }
+
+        // Store references globally
+        window.auth = auth;
+        window.db = db;
+
+        // Auth state observer
+        if (window.firebaseInitialized) {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    window.currentUser = user;
+                    updateUIForLoggedInUser(user);
+                    await loadUserBasket(user.uid);
+                } else {
+                    window.currentUser = null;
+                    updateUIForLoggedOutUser();
+                }
+            });
+        }
+
+        function updateUIForLoggedInUser(user) {
+            document.getElementById('loggedOutView').style.display = 'none';
+            document.getElementById('loggedInView').style.display = 'block';
+            document.getElementById('userName').textContent = user.displayName || 'User';
+            document.getElementById('userEmail').textContent = user.email;
+        }
+
+        function updateUIForLoggedOutUser() {
+            document.getElementById('loggedOutView').style.display = 'block';
+            document.getElementById('loggedInView').style.display = 'none';
+        }
+
+        // Google Sign In
+        window.signInWithGoogle = async function() {
+            if (!window.firebaseInitialized) {
+                showAuthError('Firebase not configured. Please add your Firebase config.');
+                return;
+            }
+            try {
+                const provider = new GoogleAuthProvider();
+                const result = await signInWithPopup(auth, provider);
+                await saveUserData(result.user.uid);
+                closeAuthModal();
+                showAuthSuccess('Successfully signed in with Google!');
+            } catch (error) {
+                showAuthError(error.message);
+            }
+        };
+
+        // Apple Sign In
+        window.signInWithApple = async function() {
+            if (!window.firebaseInitialized) {
+                showAuthError('Firebase not configured. Please add your Firebase config.');
+                return;
+            }
+            try {
+                const provider = new OAuthProvider('apple.com');
+                const result = await signInWithPopup(auth, provider);
+                await saveUserData(result.user.uid);
+                closeAuthModal();
+                showAuthSuccess('Successfully signed in with Apple!');
+            } catch (error) {
+                showAuthError(error.message);
+            }
+        };
+
+        // Email/Password Sign Up
+        window.signUpWithEmail = async function(event) {
+            event.preventDefault();
+            if (!window.firebaseInitialized) {
+                showAuthError('Firebase not configured. Please add your Firebase config.');
+                return;
+            }
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showAuthError('Passwords do not match!');
+                return;
+            }
+
+            try {
+                const result = await createUserWithEmailAndPassword(auth, email, password);
+                await saveUserData(result.user.uid);
+                closeAuthModal();
+                showAuthSuccess('Account created successfully!');
+            } catch (error) {
+                showAuthError(error.message);
+            }
+        };
+
+        // Email/Password Sign In
+        window.signInWithEmail = async function(event) {
+            event.preventDefault();
+            if (!window.firebaseInitialized) {
+                showAuthError('Firebase not configured. Please add your Firebase config.');
+                return;
+            }
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                closeAuthModal();
+                showAuthSuccess('Successfully logged in!');
+            } catch (error) {
+                showAuthError(error.message);
+            }
+        };
+
+        // Save user data to Firestore
+        async function saveUserData(userId) {
+            if (!window.firebaseInitialized) return;
+            try {
+                await setDoc(doc(db, 'users', userId), {
+                    basket: basket,
+                    lastUpdated: new Date().toISOString()
+                }, { merge: true });
+            } catch (error) {
+                console.error('Error saving user data:', error);
+            }
+        }
+
+        // Load user basket from Firestore
+        async function loadUserBasket(userId) {
+            if (!window.firebaseInitialized) return;
+            try {
+                const docSnap = await getDoc(doc(db, 'users', userId));
+                if (docSnap.exists() && docSnap.data().basket) {
+                    basket = docSnap.data().basket;
+                    updateBasket();
+                }
+            } catch (error) {
+                console.error('Error loading basket:', error);
+            }
+        }
+
+        // Log out
+        window.logOut = async function() {
+            if (!window.firebaseInitialized) return;
+            try {
+                await signOut(auth);
+                basket = [];
+                updateBasket();
+                document.getElementById('userDropdown').classList.remove('show');
+                showAuthSuccess('Logged out successfully!');
+            } catch (error) {
+                showAuthError(error.message);
+            }
+        };
+
+        // View orders
+        window.viewOrders = async function() {
+            if (!window.currentUser) {
+                showAuthError('Please log in to view orders');
+                return;
+            }
+            if (!window.firebaseInitialized) {
+                alert('Orders feature requires Firebase configuration');
+                return;
+            }
+            
+            try {
+                const q = query(collection(db, 'orders'), where('userId', '==', window.currentUser.uid));
+                const querySnapshot = await getDocs(q);
+                
+                let ordersHTML = '<h2>My Orders</h2>';
+                if (querySnapshot.empty) {
+                    ordersHTML += '<p style="text-align: center; padding: 2rem; color: #666;">No orders yet</p>';
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const order = doc.data();
+                        ordersHTML += `
+                            <div style="border: 1px solid #ddd; padding: 1rem; margin: 1rem 0; border-radius: 8px;">
+                                <strong>Order ID:</strong> ${doc.id}<br>
+                                <strong>Date:</strong> ${new Date(order.date).toLocaleDateString()}<br>
+                                <strong>Total:</strong> £${order.total.toFixed(2)}<br>
+                                <strong>Items:</strong> ${order.items.length}
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('authModalContent').innerHTML = ordersHTML;
+                document.getElementById('authModal').classList.add('show');
+            } catch (error) {
+                showAuthError('Error loading orders: ' + error.message);
+            }
+        };
+
+        function showAuthError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'auth-error';
+            errorDiv.textContent = message;
+            const content = document.getElementById('authModalContent');
+            if (content) {
+                content.insertBefore(errorDiv, content.firstChild);
+                setTimeout(() => errorDiv.remove(), 5000);
+            } else {
+                alert(message);
+            }
+        }
+
+        function showAuthSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'auth-success';
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            successDiv.style.position = 'fixed';
+            successDiv.style.top = '100px';
+            successDiv.style.right = '20px';
+            successDiv.style.zIndex = '4000';
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+    </script>
+
+    <script>
+        let basket = [];
+        const productImageStates = {};
+
+        // Initialize image states for all products
+        document.querySelectorAll('.product-card').forEach((card, index) => {
+            productImageStates[index] = 0;
+        });
+
+        function changeImage(event, productIndex, direction) {
+            event.stopPropagation();
+            
+            const card = document.querySelector(`[data-product="${productIndex}"]`);
+            const imagesContainer = card.querySelector('.product-images');
+            const images = card.querySelectorAll('.product-image');
+            const indicators = card.querySelectorAll('.indicator');
+            
+            const totalImages = images.length;
+            productImageStates[productIndex] = (productImageStates[productIndex] + direction + totalImages) % totalImages;
+            
+            imagesContainer.style.transform = `translateX(-${productImageStates[productIndex] * 100}%)`;
+            
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === productImageStates[productIndex]);
+            });
+        }
+
+        function addToBasket(name, price) {
+            const existingItem = basket.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                basket.push({ name, price, quantity: 1 });
+            }
+            
+            updateBasket();
+            showBasketNotification();
+            
+            // Save to Firebase if user is logged in
+            if (window.currentUser && window.firebaseInitialized) {
+                saveUserBasket();
+            }
+        }
+
+        async function saveUserBasket() {
+            if (!window.currentUser || !window.firebaseInitialized) return;
+            try {
+                const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+                await setDoc(doc(window.db, 'users', window.currentUser.uid), {
+                    basket: basket,
+                    lastUpdated: new Date().toISOString()
+                }, { merge: true });
+            } catch (error) {
+                console.error('Error saving basket:', error);
+            }
+        }
+
+        function removeFromBasket(name) {
+            basket = basket.filter(item => item.name !== name);
+            updateBasket();
+        }
+
+        function updateBasket() {
+            const basketCount = document.getElementById('basketCount');
+            const basketItems = document.getElementById('basketItems');
+            
+            const totalItems = basket.reduce((sum, item) => sum + item.quantity, 0);
+            basketCount.textContent = totalItems;
+            
+            if (basket.length === 0) {
+                basketItems.innerHTML = '<div class="basket-empty">Your basket is empty</div>';
+                return;
+            }
+            
+            const total = basket.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            basketItems.innerHTML = basket.map(item => `
+                <div class="basket-item">
+                    <div class="basket-item-info">
+                        <div class="basket-item-name">${item.name} x${item.quantity}</div>
+                        <div class="basket-item-price">£${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                    <button class="basket-item-remove" onclick="removeFromBasket('${item.name}')">Remove</button>
+                </div>
+            `).join('') + `
+                <div class="basket-total">Total: £${total.toFixed(2)}</div>
+                <button class="checkout-button" onclick="checkout()">Checkout</button>
+            `;
+        }
+
+        function toggleBasket() {
+            const dropdown = document.getElementById('basketDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function showBasketNotification() {
+            const dropdown = document.getElementById('basketDropdown');
+            dropdown.classList.add('show');
+            setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 2000);
+        }
+
+        function checkout() {
+            if (basket.length === 0) return;
+            
+            const total = basket.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // If user is logged in, save order to Firebase
+            if (window.currentUser && window.firebaseInitialized) {
+                saveOrder(window.currentUser.uid, basket, total);
+            }
+            
+            alert(`Thank you for your order!\n\nTotal: £${total.toFixed(2)}\n\nYour order is being processed.`);
+            basket = [];
+            updateBasket();
+            document.getElementById('basketDropdown').classList.remove('show');
+        }
+
+        async function saveOrder(userId, items, total) {
+            if (!window.firebaseInitialized) return;
+            try {
+                const { collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+                await addDoc(collection(window.db, 'orders'), {
+                    userId: userId,
+                    items: items,
+                    total: total,
+                    date: new Date().toISOString(),
+                    status: 'pending'
+                });
+            } catch (error) {
+                console.error('Error saving order:', error);
+            }
+        }
+
+        // Close basket dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const basketEl = event.target.closest('.basket');
+            const dropdown = document.getElementById('basketDropdown');
+            
+            if (!basketEl && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+
+            // Close user dropdown when clicking outside
+            const userEl = event.target.closest('#userAccount');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            if (!userEl && userDropdown && userDropdown.classList.contains('show')) {
+                userDropdown.classList.remove('show');
+            }
+        });
+
+        // Toggle user menu
+        window.toggleUserMenu = function(event) {
+            event.preventDefault();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        };
+
+        // Show auth modal
+        window.showAuthModal = function(type) {
+            document.getElementById('userDropdown').classList.remove('show');
+            const modal = document.getElementById('authModal');
+            const content = document.getElementById('authModalContent');
+            
+            if (type === 'login') {
+                content.innerHTML = `
+                    <h2>Log In</h2>
+                    <form class="auth-form" onsubmit="signInWithEmail(event)">
+                        <input type="email" id="loginEmail" class="auth-input" placeholder="Email" required>
+                        <input type="password" id="loginPassword" class="auth-input" placeholder="Password" required>
+                        <button type="submit" class="auth-submit">Log In</button>
+                    </form>
+                    <div class="auth-divider">or</div>
+                    <div class="social-auth">
+                        <button class="social-button" onclick="signInWithGoogle()">
+                            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                            Continue with Google
+                        </button>
+                        <button class="social-button" onclick="signInWithApple()">
+                            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" fill="#000"/></svg>
+                            Continue with Apple
+                        </button>
+                    </div>
+                    <div class="auth-toggle">
+                        Don't have an account? <a href="#" onclick="showAuthModal('signup'); return false;">Sign up</a>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <h2>Sign Up</h2>
+                    <form class="auth-form" onsubmit="signUpWithEmail(event)">
+                        <input type="email" id="signupEmail" class="auth-input" placeholder="Email" required>
+                        <input type="password" id="signupPassword" class="auth-input" placeholder="Password" required minlength="6">
+                        <input type="password" id="confirmPassword" class="auth-input" placeholder="Confirm Password" required minlength="6">
+                        <button type="submit" class="auth-submit">Sign Up</button>
+                    </form>
+                    <div class="auth-divider">or</div>
+                    <div class="social-auth">
+                        <button class="social-button" onclick="signInWithGoogle()">
+                            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                            Continue with Google
+                        </button>
+                        <button class="social-button" onclick="signInWithApple()">
+                            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" fill="#000"/></svg>
+                            Continue with Apple
+                        </button>
+                    </div>
+                    <div class="auth-toggle">
+                        Already have an account? <a href="#" onclick="showAuthModal('login'); return false;">Log in</a>
+                    </div>
+                `;
+            }
+            
+            modal.classList.add('show');
+        };
+
+        // Close auth modal
+        window.closeAuthModal = function() {
+            document.getElementById('authModal').classList.remove('show');
+        };
+
+        // Initialize basket
+        updateBasket();
+    </script>
+</body>
+</html>
